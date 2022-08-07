@@ -25,7 +25,7 @@ pipeline {
             sh 'printenv'
             sh 'docker build -t sixpacksec/numeric-app:""$GIT_COMMIT"" .'
 //            sh 'docker push sixpacksec/numeric-app:""$GIT_COMMIT""'
-          }
+//          }
         }
       }
     }
