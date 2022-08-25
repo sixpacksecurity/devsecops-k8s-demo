@@ -40,6 +40,9 @@ pipeline {
           },
           "Hadolint Scan": {
             sh 'docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile'
+          },
+          "OPA Conftest": {
+            sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
           }
         )
       }
