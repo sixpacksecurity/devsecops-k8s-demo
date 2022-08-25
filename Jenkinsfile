@@ -19,11 +19,9 @@ pipeline {
       stage('SAST') {
             steps {
               parallel (
-                "SonarQube": {
                   withSonarQubeEnv('SonarQube') {
                   sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000"
-                  }
-                },
+                  },
                 "Semgrep": {
                   sh "docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep --config=auto"
                 }
