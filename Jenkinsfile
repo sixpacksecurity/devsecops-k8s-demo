@@ -25,7 +25,7 @@ pipeline {
                   }
                 },
                 "Semgrep": {
-                  sh "docker run --rm -v ${PWD}:/src returntocorp/semgrep semgrep --config=auto"
+                  sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep --config=auto"
                 }
   //              timeout(time: 2, unit: 'MINUTES') {
   //          script {
