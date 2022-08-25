@@ -16,22 +16,29 @@ pipeline {
             }
         }
     
-      stage('SonarQube - SAST') {
+      stage('SAST') {
             steps {
-              withSonarQubeEnv('SonarQube') {
-              sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000"
-            }
-//              timeout(time: 2, unit: 'MINUTES') {
-//          script {
-//            waitForQualityGate abortPipeline: true
-//          }
-//              }
-            }
-        }
+              parallel (
+                "SonarQube": {
+                  withSonarQubeEnv('SonarQube') {
+                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000"
+                  }
+                },
+                "Semgrep": {
+                  sh "docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep --config=auto"
+                }
+  //              timeout(time: 2, unit: 'MINUTES') {
+  //          script {
+  //            waitForQualityGate abortPipeline: true
+  //          }
+  //         }
+            )
+           }
+         }
     
       stage('Vulnerability Scan - Docker') {
       steps {
-        parallel(
+        parallel (
           "Dependency Scan": {
             sh "mvn dependency-check:check"
           },
