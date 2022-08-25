@@ -21,13 +21,13 @@ pipeline {
         }
       stage('SonarQube - SAST') {
             steps {
-              withSonarQubeEnv('SonarQube') {
-              sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.142.138.97:9000 -Dsonar.login=sqp_efe5f49e134ccb0cbc3ffe0a48aed2ece1174c47"
-            }
-              timeout(time: 2, unit: 'MINUTES') {
-          script {
-            waitForQualityGate abortPipeline: true
-          }
+//              withSonarQubeEnv('SonarQube') {
+              sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000 -Dsonar.login=sqp_059a164a0dda174ea6f71a8b77942161338fd014"
+//            }
+//              timeout(time: 2, unit: 'MINUTES') {
+//          script {
+//            waitForQualityGate abortPipeline: true
+//          }
               }
             }
         }
