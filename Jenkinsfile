@@ -2,23 +2,20 @@ pipeline {
   agent any
 
   stages {
+    
       stage('Build Artifact') {
             steps {
               sh "mvn clean package -DskipTests=true"
               archive 'target/*.jar' //test trigger
             }
         }
+    
       stage('Unit Tests - JUnit and Jacoc') {
             steps {
               sh "mvn test"
             }
-            post {
-            always {
-              junit 'target/surefire-reports/*.xml'
-              jacoco execPattern: 'target/jacoco.exec'
-            }
-          }
         }
+    
       stage('SonarQube - SAST') {
             steps {
               withSonarQubeEnv('SonarQube') {
@@ -31,16 +28,13 @@ pipeline {
 //              }
             }
         }
-    stage('Dependency Check - Docker ') {
-      steps {
-        sh "mvn dependency-check:check"
-      }
-      post {
-        always {
-          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+    
+      stage('Dependency Check - Docker ') {
+        steps {
+          sh "mvn dependency-check:check"
         }
       }
-    }
+    
       stage('Docker Build and Push') {
         steps {
           withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
@@ -50,6 +44,7 @@ pipeline {
           }
         }
       }
+    
       stage('Kubernetes Deployment - DEV') {
         steps {
           withKubeConfig([credentialsId: 'kubeconfig']) {
@@ -58,5 +53,13 @@ pipeline {
           }
         }
       }
+    
+    post {
+            always {
+              junit 'target/surefire-reports/*.xml'
+              jacoco execPattern: 'target/jacoco.exec'
+              dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+            }
+          }
     }
 }
