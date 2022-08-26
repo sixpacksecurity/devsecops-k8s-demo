@@ -17,15 +17,7 @@ pipeline {
         }
     
       stage('SAST') {
-            steps {
-              parallel (
-                "SonarQube": {
-                  withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000"
-                  }
-                },
-                "Semgrep": {
-                  environment { 
+        environment { 
                     // Add the rules that Semgrep uses by setting the SEMGREP_RULES environment variable. 
                     SEMGREP_RULES = "p/default"
                     // Scan changed files in PRs or MRs (diff-aware scanning):
@@ -35,6 +27,14 @@ pipeline {
                     // Set to 0 to disable the timeout.
                      SEMGREP_TIMEOUT = "300"
                   }
+            steps {
+              parallel (
+                "SonarQube": {
+                  withSonarQubeEnv('SonarQube') {
+                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sample-app -Dsonar.host.url=http://18.140.114.228:9000"
+                  }
+                },
+                "Semgrep": {
                   sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep ci --config=auto"
                 }
   //              timeout(time: 2, unit: 'MINUTES') {
