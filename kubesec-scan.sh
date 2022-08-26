@@ -9,7 +9,8 @@ scan_score=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deploym
     # Kubesec scan result processing
     # echo "Scan Score : $scan_score"
 
-	if [[ "${scan_score}" -ge 5 ]] then
+	if [[ "${scan_score}" -ge 5 ]] 
+	then
 	    echo "Score is $scan_score"
 	    echo "Kubesec Scan $scan_message"
 	else
