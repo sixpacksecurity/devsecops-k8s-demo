@@ -25,7 +25,17 @@ pipeline {
                   }
                 },
                 "Semgrep": {
-                  sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep --config=auto"
+                  environment { 
+                    // Add the rules that Semgrep uses by setting the SEMGREP_RULES environment variable. 
+                    SEMGREP_RULES = "p/default"
+                    // Scan changed files in PRs or MRs (diff-aware scanning):
+                     SEMGREP_BASELINE_REF = "${GIT_BRANCH}"
+                    // Uncomment SEMGREP_TIMEOUT to set this job's timeout (in seconds):
+                     Default timeout is 1800 seconds (30 minutes).
+                    // Set to 0 to disable the timeout.
+                     SEMGREP_TIMEOUT = "300"
+                  }
+                  sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep ci --config=auto"
                 }
   //              timeout(time: 2, unit: 'MINUTES') {
   //          script {
