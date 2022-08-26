@@ -9,11 +9,10 @@ scan_score=$(docker run -i kubesec/kubesec scan /dev/stdin < k8s_deployment_serv
     # Kubesec scan result processing
     # echo "Scan Score : $scan_score"
 
-if [[ "${scan_score}" -ge 5 ]]
-    echo "Score is $scan_score" 
-    echo "Kubesec Scan $scan_message";
+if [[ "${scan_score}" -ge 5 ]]; 
+then
+    echo "Score is $scan_score.\n Kubesec Scan $scan_message"
 else
-    echo "Score is $scan_score, which is less than or equal to 5."
-    echo "Scanning Kubernetes Resource has Failed"
+    echo "Score is $scan_score, which is less than or equal to 5.\n Scanning Kubernetes Resource has Failed"
     exit 1;
 fi;
