@@ -31,7 +31,7 @@ pipeline {
                     // Scan changed files in PRs or MRs (diff-aware scanning):
                      SEMGREP_BASELINE_REF = "${GIT_BRANCH}"
                     // Uncomment SEMGREP_TIMEOUT to set this job's timeout (in seconds):
-                     Default timeout is 1800 seconds (30 minutes).
+                    // Default timeout is 1800 seconds (30 minutes).
                     // Set to 0 to disable the timeout.
                      SEMGREP_TIMEOUT = "300"
                   }
