@@ -35,7 +35,7 @@ pipeline {
                   }
                 },
                 "Semgrep": {
-                  sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep ci -e SEMGREP_RULES = 'p/default' -e SEMGREP_BASELINE_REF = '${GIT_BRANCH}' -e SEMGREP_TIMEOUT = '300' "
+                  sh "docker run --rm -v $WORKSPACE:/src returntocorp/semgrep semgrep -e SEMGREP_RULES = 'p/default' -e SEMGREP_BASELINE_REF = '${GIT_BRANCH}' -e SEMGREP_TIMEOUT = '300' semgrep ci "
                 }
   //              timeout(time: 2, unit: 'MINUTES') {
   //          script {
