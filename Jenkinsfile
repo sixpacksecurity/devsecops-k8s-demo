@@ -56,7 +56,7 @@ pipeline {
             sh "bash trivy-docker-image-scan.sh"
           },
           "Hadolint Scan": {
-            sh "docker run --rm -e THRESHOLD='error' -i ghcr.io/hadolint/hadolint < Dockerfile"
+            sh "docker run --rm -e HADOLINT_FAILURE_THRESHOLD=info -i ghcr.io/hadolint/hadolint < Dockerfile"
           },
           "OPA Conftest": {
             sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
