@@ -1,6 +1,15 @@
 pipeline {
   agent any
-
+  
+  environment {
+    deploymentName = "devsecops"
+    containerName = "devsecops-container"
+    serviceName = "devsecops-svc"
+    imageName = "sixpacksec/numeric-app:${GIT_COMMIT}"
+    applicationURL = "http://http://18.140.114.228"
+    applicationURI = "/increment/99"
+  }
+  
   stages {
     
       stage('Build Artifact') {
@@ -98,11 +107,20 @@ pipeline {
       }
     }
   
+    stage('OWASP ZAP - DAST') {
+      steps {
+        withKubeConfig([credentialsId: 'kubeconfig']) {
+          sh 'bash zap.sh'
+        }
+      }
+    }
+  
     post {
             always {
               junit 'target/surefire-reports/*.xml'
               jacoco execPattern: 'target/jacoco.exec'
               dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+              publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report'])
             }
           }
 }
