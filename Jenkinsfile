@@ -115,7 +115,6 @@ pipeline {
           }
         }
       }
-    }
   
       stage('Prompte to PROD?') {
           steps {
@@ -142,7 +141,7 @@ pipeline {
             )
           }
         }
-  
+     }
   
     post {
             always {
